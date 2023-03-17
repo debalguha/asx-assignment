@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -18,14 +19,14 @@ public class UserManagementController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public @ResponseBody ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public @ResponseBody ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
         final UserDTO createdUserDTO = userService.saveOrUpdate(userDTO);
         final URI uri = UriComponentsBuilder.fromPath("/user/{id}").build(createdUserDTO);
         return ResponseEntity.ok().body(createdUserDTO);
     }
 
     @PutMapping(consumes = "application/json", produces = "application/json")
-    public @ResponseBody ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
+    public @ResponseBody ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO) {
         return ResponseEntity.accepted().body(userService.saveOrUpdate(userDTO));
     }
 

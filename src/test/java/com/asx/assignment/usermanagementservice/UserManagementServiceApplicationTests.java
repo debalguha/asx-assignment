@@ -30,7 +30,7 @@ class UserManagementServiceApplicationTests {
 
     @Test
     void testUserCreated_POST() throws Exception {
-        UserDTO userDTO = easyRandom.nextObject(UserDTO.class);
+        UserDTO userDTO = getUserDTO();
         String content = mockMvc.perform(post("/user")
                 .content(objectMapper.writeValueAsString(userDTO))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -41,7 +41,7 @@ class UserManagementServiceApplicationTests {
     }
     @Test
     void testUserCreated_PUT() throws Exception {
-        UserDTO userDTO = easyRandom.nextObject(UserDTO.class);
+        UserDTO userDTO = getUserDTO();
         String postContent = mockMvc.perform(post("/user")
                 .content(objectMapper.writeValueAsString(userDTO))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -61,7 +61,7 @@ class UserManagementServiceApplicationTests {
 
     @Test
     void testFindUser_GET() throws Exception {
-        UserDTO userDTO = easyRandom.nextObject(UserDTO.class);
+        UserDTO userDTO = getUserDTO();
         String postContent = mockMvc.perform(post("/user")
                 .content(objectMapper.writeValueAsString(userDTO))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -74,7 +74,22 @@ class UserManagementServiceApplicationTests {
         UserDTO getResponse = objectMapper.readValue(getContent, UserDTO.class);
         assertThat(createResponse).isEqualTo(getResponse);
     }
+    @Test
+    void testInvalidGender() throws Exception {
+        String userDtoWithInvalidGender = "{\"id\":null,\"title\":\"eOMtThyhVNLWUZNRcBaQKxI\",\"firstName\":null,\"lastName\":\"JxkyvRnL\",\"gender\":\"MALE\",\"address\":{\"street\":\"RYtGKbgicZaHCBRQDSx\",\"city\":\"VLhpfQGTMDYpsBZxvfBoeygjb\",\"state\":\"ACT\",\"postCode\":2000}}";
+        String postContent = mockMvc.perform(post("/user")
+                .content(userDtoWithInvalidGender)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        System.out.println(postContent);
+    }
 
+    private UserDTO getUserDTO() {
+        UserDTO userDTO = easyRandom.nextObject(UserDTO.class);
+        userDTO.getAddress().setPostCode(2000);
+        return userDTO;
+    }
     void assertValues(UserDTO expected, UserDTO actual) {
         assertThat(actual.getFirstName()).isEqualTo(expected.getFirstName());
         assertThat(actual.getLastName()).isEqualTo(expected.getLastName());
