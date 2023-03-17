@@ -1,6 +1,7 @@
 package com.asx.assignment.usermanagementservice;
 
 import com.asx.assignment.ums.UserManagementServiceApplication;
+import com.asx.assignment.ums.model.Gender;
 import com.asx.assignment.ums.rest.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jeasy.random.EasyRandom;
@@ -77,12 +78,11 @@ class UserManagementServiceApplicationTests {
     @Test
     void testInvalidGender() throws Exception {
         String userDtoWithInvalidGender = "{\"id\":null,\"title\":\"eOMtThyhVNLWUZNRcBaQKxI\",\"firstName\":null,\"lastName\":\"JxkyvRnL\",\"gender\":\"MALE\",\"address\":{\"street\":\"RYtGKbgicZaHCBRQDSx\",\"city\":\"VLhpfQGTMDYpsBZxvfBoeygjb\",\"state\":\"ACT\",\"postCode\":2000}}";
-        String postContent = mockMvc.perform(post("/user")
+        mockMvc.perform(post("/user")
                 .content(userDtoWithInvalidGender)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        System.out.println(postContent);
+        ).andExpect(status().isBadRequest());
     }
 
     private UserDTO getUserDTO() {

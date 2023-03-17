@@ -1,6 +1,7 @@
 package com.asx.assignment.ums.rest.dto;
 
 import com.asx.assignment.ums.model.State;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,6 @@ public class AddressDTO {
     @Valid
     private State state;
     @Min(1111)
+    @JsonProperty("postcode")
     private int postCode;
 }

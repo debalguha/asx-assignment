@@ -23,7 +23,8 @@ public class User {
     private String lastName;
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Embedded
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
     public User copyFrom(User other) {
