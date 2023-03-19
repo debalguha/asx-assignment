@@ -5,6 +5,9 @@ import com.asx.assignment.ums.repository.UserRepository;
 import com.asx.assignment.ums.rest.dto.AddressDTO;
 import com.asx.assignment.ums.rest.dto.UserDTO;
 import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.FieldPredicates;
+import org.jeasy.random.TypePredicates;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,44 +23,57 @@ import javax.sql.DataSource;
 
 import java.util.Optional;
 
+import static java.lang.Long.parseLong;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 class UserServiceTest {
 
-    @Autowired private DataSource dataSource;
-    @Autowired private JdbcTemplate jdbcTemplate;
-    @Autowired private EntityManager entityManager;
+    @Autowired
+    private DataSource dataSource;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private EntityManager entityManager;
     @Autowired
     private UserRepository userRepository;
 
     private UserService userService;
 
-    final EasyRandom easyRandom = new EasyRandom();
+    EasyRandom easyRandom;
 
     @BeforeEach
     public void setup() {
         userService = new UserService(userRepository);
+        easyRandom = new EasyRandom(
+                new EasyRandomParameters().excludeField(
+                        FieldPredicates.named("id")
+                                .and(FieldPredicates.ofType(String.class))
+                                .and(FieldPredicates.inClass(UserDTO.class))
+                )
+        );
     }
 
     @AfterEach
     public void tearDown() {
         userRepository.deleteAll();
     }
+
     @Test
-    void injectedComponentsAreNotNull(){
+    void injectedComponentsAreNotNull() {
         assertThat(dataSource).isNotNull();
         assertThat(jdbcTemplate).isNotNull();
         assertThat(entityManager).isNotNull();
         assertThat(userRepository).isNotNull();
     }
+
     @Test
     void saveOrUpdate_save() {
         UserDTO userDTO = easyRandom.nextObject(UserDTO.class);
         UserDTO savedUserDTO = userService.saveOrUpdate(userDTO);
         Assertions.assertNotNull(savedUserDTO);
-        Assertions.assertTrue(savedUserDTO.getId() > 0);
+        Assertions.assertTrue(parseLong(savedUserDTO.getId()) > 0);
     }
 
     @Test
@@ -65,7 +81,7 @@ class UserServiceTest {
         UserDTO userDTO = easyRandom.nextObject(UserDTO.class);
         UserDTO user = userService.saveOrUpdate(userDTO);
         Assertions.assertNotNull(user);
-        Assertions.assertTrue(user.getId() > 0);
+        Assertions.assertTrue(parseLong(user.getId()) > 0);
         userDTO.setId(user.getId());
         userDTO.setAddress(new AddressDTO("Jenkins Road", "Carlingford", State.ACT, 2111));
         UserDTO updatedUser = userService.saveOrUpdate(userDTO);
@@ -79,7 +95,7 @@ class UserServiceTest {
     void findById() {
         UserDTO userDTO = easyRandom.nextObject(UserDTO.class);
         UserDTO savedUserDTO = userService.saveOrUpdate(userDTO);
-        Optional<UserDTO> foundUserDTO = userService.findById(savedUserDTO.getId());
+        Optional<UserDTO> foundUserDTO = userService.findById(parseLong(savedUserDTO.getId()));
         assertThat(foundUserDTO.get()).isEqualTo(savedUserDTO);
     }
 }

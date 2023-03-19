@@ -5,6 +5,9 @@ import com.asx.assignment.ums.model.Gender;
 import com.asx.assignment.ums.rest.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.FieldPredicates;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,18 @@ class UserManagementServiceApplicationTests {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    final EasyRandom easyRandom = new EasyRandom();
+    EasyRandom easyRandom;
+
+    @BeforeEach
+    public void setup() {
+        easyRandom = new EasyRandom(
+                new EasyRandomParameters().excludeField(
+                        FieldPredicates.named("id")
+                                .and(FieldPredicates.ofType(String.class))
+                                .and(FieldPredicates.inClass(UserDTO.class))
+                )
+        );
+    }
 
     @Test
     void testUserCreated_POST() throws Exception {
