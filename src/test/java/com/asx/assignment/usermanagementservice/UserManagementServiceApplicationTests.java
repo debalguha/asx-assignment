@@ -61,7 +61,7 @@ class UserManagementServiceApplicationTests {
     }
 
     @Test
-    void testUserCreated_PUT() throws Exception {
+    void testUserUpdate_PUT() throws Exception {
         UserDTO userDTO = getUserDTO();
         String postContent = mockMvc.perform(post("/userdetails")
                 .content(objectMapper.writeValueAsString(userDTO))
@@ -97,7 +97,7 @@ class UserManagementServiceApplicationTests {
     }
 
     @Test
-    void testInvalidGender() throws Exception {
+    void testInvalidFirstAndLastName() throws Exception {
         String userDtoWithInvalidGender = "{\"id\":null,\"title\":\"eOMtThyhVNLWUZNRcBaQKxI\",\"firstname\":null,\"lastname\":null,\"gender\":\"MALE\",\"address\":{\"street\":\"RYtGKbgicZaHCBRQDSx\",\"city\":\"VLhpfQGTMDYpsBZxvfBoeygjb\",\"state\":\"ACT\",\"postCode\":2000}}";
         mockMvc.perform(post("/userdetails")
                 .content(userDtoWithInvalidGender)
@@ -107,6 +107,26 @@ class UserManagementServiceApplicationTests {
                 .andExpect(jsonPath("$.violations", hasSize(2)))
                 .andExpect(jsonPath("$.violations[?(@.fieldName == 'firstName')].message", contains("must not be empty")))
                 .andExpect(jsonPath("$.violations[?(@.fieldName == 'lastName')].message", contains("must not be empty")));
+    }
+
+    @Test
+    void testUserUpdate_InvalidId() throws Exception {
+        UserDTO userDTO = getUserDTO();
+        String postContent = mockMvc.perform(post("/userdetails")
+                .content(objectMapper.writeValueAsString(userDTO))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        UserDTO createResponse = objectMapper.readValue(postContent, UserDTO.class);
+        UserDTO changedResponse = new UserDTO("BLAH", createResponse.getTitle(), createResponse.getFirstName() + "_Update",
+                createResponse.getLastName(), createResponse.getGender(), createResponse.getAddress());
+        mockMvc.perform(put("/userdetails")
+                .content(objectMapper.writeValueAsString(changedResponse))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.violations", hasSize(1)))
+                .andExpect(jsonPath("$.violations[?(@.fieldName == 'id')].message", contains("Invalid id provided. Must be a positive number.")));
     }
 
     private UserDTO getUserDTO() {
