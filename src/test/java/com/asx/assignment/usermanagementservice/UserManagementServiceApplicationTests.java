@@ -32,7 +32,7 @@ class UserManagementServiceApplicationTests {
     @Test
     void testUserCreated_POST() throws Exception {
         UserDTO userDTO = getUserDTO();
-        String content = mockMvc.perform(post("/user")
+        String content = mockMvc.perform(post("/userdetails")
                 .content(objectMapper.writeValueAsString(userDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -43,7 +43,7 @@ class UserManagementServiceApplicationTests {
     @Test
     void testUserCreated_PUT() throws Exception {
         UserDTO userDTO = getUserDTO();
-        String postContent = mockMvc.perform(post("/user")
+        String postContent = mockMvc.perform(post("/userdetails")
                 .content(objectMapper.writeValueAsString(userDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -51,7 +51,7 @@ class UserManagementServiceApplicationTests {
         UserDTO createResponse = objectMapper.readValue(postContent, UserDTO.class);
         UserDTO changedResponse = new UserDTO(createResponse.getId(), createResponse.getTitle(), createResponse.getFirstName() + "_Update",
                 createResponse.getLastName(), createResponse.getGender(), createResponse.getAddress());
-        String putContent = mockMvc.perform(put("/user")
+        String putContent = mockMvc.perform(put("/userdetails")
                 .content(objectMapper.writeValueAsString(changedResponse))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -63,13 +63,13 @@ class UserManagementServiceApplicationTests {
     @Test
     void testFindUser_GET() throws Exception {
         UserDTO userDTO = getUserDTO();
-        String postContent = mockMvc.perform(post("/user")
+        String postContent = mockMvc.perform(post("/userdetails")
                 .content(objectMapper.writeValueAsString(userDTO))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         UserDTO createResponse = objectMapper.readValue(postContent, UserDTO.class);
-        String getContent = mockMvc.perform(get("/user/" + createResponse.getId())
+        String getContent = mockMvc.perform(get("/userdetails/" + createResponse.getId())
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         UserDTO getResponse = objectMapper.readValue(getContent, UserDTO.class);
@@ -78,7 +78,7 @@ class UserManagementServiceApplicationTests {
     @Test
     void testInvalidGender() throws Exception {
         String userDtoWithInvalidGender = "{\"id\":null,\"title\":\"eOMtThyhVNLWUZNRcBaQKxI\",\"firstName\":null,\"lastName\":\"JxkyvRnL\",\"gender\":\"MALE\",\"address\":{\"street\":\"RYtGKbgicZaHCBRQDSx\",\"city\":\"VLhpfQGTMDYpsBZxvfBoeygjb\",\"state\":\"ACT\",\"postCode\":2000}}";
-        mockMvc.perform(post("/user")
+        mockMvc.perform(post("/userdetails")
                 .content(userDtoWithInvalidGender)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

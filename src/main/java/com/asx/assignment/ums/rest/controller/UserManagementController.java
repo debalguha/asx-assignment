@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping(path = "/user")
+@RequestMapping(path = "/userdetails")
 public class UserManagementController {
     final UserService userService;
 
