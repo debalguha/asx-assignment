@@ -1,6 +1,7 @@
 package com.asx.assignment.ums.rest.dto;
 
 import com.asx.assignment.ums.model.Gender;
+import com.asx.assignment.ums.rest.validation.IdValidator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class UserDTO {
     @Valid
+    @IdValidator
     private String id;
     @NotEmpty
     private String title;

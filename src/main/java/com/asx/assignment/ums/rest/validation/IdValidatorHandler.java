@@ -7,11 +7,15 @@ import java.util.Optional;
 public class IdValidatorHandler implements ConstraintValidator<IdValidator, String> {
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        return Optional.ofNullable(s)
-                .filter(this:: canParseToLong)
-                .map(Long::parseLong)
-                .filter(l -> l > 0)
-                .isPresent();
+        if(s == null || "".equals(s)) {
+            return true;
+        } else {
+            return Optional.of(s)
+                    .filter(this:: canParseToLong)
+                    .map(Long::parseLong)
+                    .map(l -> l > 0)
+                    .orElse(false);
+        }
     }
 
     private boolean canParseToLong(String input) {
