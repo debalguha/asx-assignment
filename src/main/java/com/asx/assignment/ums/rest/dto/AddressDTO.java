@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -22,7 +21,6 @@ public class AddressDTO {
     @NotNull
     @Valid
     private State state;
-    @Min(1111)
     @JsonProperty("postcode")
     private int postCode;
 }
