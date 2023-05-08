@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "f39fb2ae-f321-4275-8527-78ee9390cd1a",
+		"name": "user-detaila-asx",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4261928"
+	},
+	"item": [
+		{
+			"name": "create valid user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Mr.\",\n    \"firstname\": \"John\",\n    \"lastname\": \"Doe\",\n    \"gender\": \"male\",\n    \"address\": {\n        \"street\": \"16 Bridge st\",\n        \"city\": \"Sydney\",\n        \"state\": \"NSW\",\n        \"postcode\": 2000\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/userdetails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"userdetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update valid user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"201\",\n    \"title\": \"Mr.\",\n    \"firstname\": \"John\",\n    \"lastname\": \"Doe\",\n    \"gender\": \"male\",\n    \"address\": {\n        \"street\": \"16 Bridge st\",\n        \"city\": \"Sydney\",\n        \"state\": \"NSW\",\n        \"postcode\": 2000\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/userdetails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"userdetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update invalid user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"ABC\",\n    \"title\": \"Mr.\",\n    \"firstname\": \"John\",\n    \"lastname\": \"Doe\",\n    \"gender\": \"female\",\n    \"address\": {\n        \"street\": \"16 Bridge st\",\n        \"city\": \"Sydney\",\n        \"state\": \"NSW\",\n        \"postcode\": 2000\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/userdetails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"userdetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create invalid user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"201\",\n    \"title\": \"Mr.\",\n    \"firstname\": \"\",\n    \"lastname\": null,\n    \"gender\": \"blah\",\n    \"address\": {\n        \"street\": \"16 Bridge st\",\n        \"city\": \"Sydney\",\n        \"state\": \"NSW\",\n        \"postcode\": 2000\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/userdetails",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"userdetails"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/userdetails/201",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"userdetails",
+						"201"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

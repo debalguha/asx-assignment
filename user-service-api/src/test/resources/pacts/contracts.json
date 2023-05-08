@@ -1,0 +1,446 @@
+{
+    "provider": {
+        "name": "UserServiceApiProvider"
+    },
+    "consumer": {
+        "name": "userServiceConsumer"
+    },
+    "interactions": [
+        {
+            "description": "An invalid POST request with missing first and last name in json body",
+            "request": {
+                "method": "POST",
+                "path": "/api/userdetails",
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "title": "Mr.",
+                    "firstname": "John",
+                    "gender": "female",
+                    "address": {
+                        "street": "16 Bridge st",
+                        "city": "Sydney",
+                        "state": "NSW",
+                        "postcode": 2000
+                    }
+                }
+            },
+            "response": {
+                "status": 400,
+                "body": {
+                    "violations": [
+                        {
+                            "fieldName": "lastName",
+                            "message": "must not be empty"
+                        }
+                    ]
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "Invalid create"
+                }
+            ]
+        },
+        {
+            "description": "An invalid PUT request with non numeric id",
+            "request": {
+                "method": "PUT",
+                "path": "/api/userdetails",
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "id": "ABC",
+                    "title": "Mr.",
+                    "firstname": "John",
+                    "lastname": "Wicks",
+                    "gender": "female",
+                    "address": {
+                        "id": "2",
+                        "street": "16 Bridge st",
+                        "city": "Sydney",
+                        "state": "NSW",
+                        "postcode": 2000
+                    }
+                }
+            },
+            "response": {
+                "status": 400,
+                "body": {
+                    "violations": [
+                        {
+                            "fieldName": "id",
+                            "message": "Invalid id provided. Must be a positive number."
+                        }
+                    ]
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "Invalid update"
+                }
+            ]
+        },
+        {
+            "description": "A GET request with valid id",
+            "request": {
+                "method": "GET",
+                "path": "/api/userdetails/1"
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "firstname": "John",
+                    "address": {
+                        "city": "Sydney",
+                        "street": "16 Bridge st",
+                        "postcode": 2000,
+                        "id": "1",
+                        "state": "NSW"
+                    },
+                    "gender": "male",
+                    "id": "1",
+                    "title": "Mr.",
+                    "lastname": "Doe"
+                },
+                "matchingRules": {
+                    "body": {
+                        "$.id": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.address.id": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.address.postcode": {
+                            "matchers": [
+                                {
+                                    "match": "integer"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    }
+                },
+                "generators": {
+                    "body": {
+                        "$.id": {
+                            "type": "ProviderState",
+                            "expression": "${userId}",
+                            "dataType": "STRING"
+                        },
+                        "$.address.id": {
+                            "type": "ProviderState",
+                            "expression": "${addressId}",
+                            "dataType": "STRING"
+                        }
+                    }
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "Test Get Valid User"
+                }
+            ]
+        },
+        {
+            "description": "A POST request with valid json body",
+            "request": {
+                "method": "POST",
+                "path": "/api/userdetails",
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "title": "Mr.",
+                    "firstname": "John",
+                    "lastname": "Doe",
+                    "gender": "male",
+                    "address": {
+                        "street": "16 Bridge st",
+                        "city": "Sydney",
+                        "state": "NSW",
+                        "postcode": 2000
+                    }
+                }
+            },
+            "response": {
+                "status": 201,
+                "headers": {
+                    "Content-Type": "application/json; charset=UTF-8",
+                    "Location": "^http://5...q:35/api/userdetails/648$"
+                },
+                "body": {
+                    "firstname": "John",
+                    "address": {
+                        "city": "Sydney",
+                        "street": "16 Bridge st",
+                        "postcode": 2000,
+                        "id": "1",
+                        "state": "NSW"
+                    },
+                    "gender": "male",
+                    "id": "1",
+                    "title": "Mr.",
+                    "lastname": "Doe"
+                },
+                "matchingRules": {
+                    "body": {
+                        "$.id": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.title": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.address.id": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.address.postcode": {
+                            "matchers": [
+                                {
+                                    "match": "integer"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    },
+                    "header": {
+                        "Content-Type": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "application/json(;\\s?charset=[\\w\\-]+)?"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "Location": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "^http:\\/\\/[a-z.0-9]+:\\d+\\/api\\/userdetails\\/\\d+$"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    }
+                },
+                "generators": {
+                    "body": {
+                        "$.id": {
+                            "type": "ProviderState",
+                            "expression": "${userId}",
+                            "dataType": "STRING"
+                        },
+                        "$.address.id": {
+                            "type": "ProviderState",
+                            "expression": "${addressId}",
+                            "dataType": "STRING"
+                        }
+                    }
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "Test create user"
+                }
+            ]
+        },
+        {
+            "description": "A GET request with valid id, that is not present",
+            "request": {
+                "method": "GET",
+                "path": "/api/userdetails/2"
+            },
+            "response": {
+                "status": 404
+            },
+            "providerStates": [
+                {
+                    "name": "Test user not found"
+                }
+            ]
+        },
+        {
+            "description": "A PUT request with valid json body",
+            "request": {
+                "method": "PUT",
+                "path": "/api/userdetails",
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": {
+                    "firstname": "John",
+                    "address": {
+                        "city": "Sydney",
+                        "street": "16 Bridge st",
+                        "postcode": 2000,
+                        "id": "1",
+                        "state": "NSW"
+                    },
+                    "gender": "female",
+                    "id": "1",
+                    "title": "Mr.",
+                    "lastname": "Doe"
+                },
+                "matchingRules": {
+                    "body": {
+                        "$.id": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.address.id": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.address.postcode": {
+                            "matchers": [
+                                {
+                                    "match": "integer"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    }
+                },
+                "generators": {
+                    "body": {
+                        "$.id": {
+                            "type": "ProviderState",
+                            "expression": "${userId}",
+                            "dataType": "STRING"
+                        },
+                        "$.address.id": {
+                            "type": "ProviderState",
+                            "expression": "${addressId}",
+                            "dataType": "STRING"
+                        }
+                    }
+                }
+            },
+            "response": {
+                "status": 202,
+                "headers": {
+                    "Content-Type": "application/json; charset=UTF-8"
+                },
+                "body": {
+                    "firstname": "John",
+                    "address": {
+                        "city": "Sydney",
+                        "street": "16 Bridge st",
+                        "postcode": 2000,
+                        "id": "1",
+                        "state": "NSW"
+                    },
+                    "gender": "female",
+                    "id": "1",
+                    "title": "Mr.",
+                    "lastname": "Doe"
+                },
+                "matchingRules": {
+                    "body": {
+                        "$.id": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.address.id": {
+                            "matchers": [
+                                {
+                                    "match": "type"
+                                }
+                            ],
+                            "combine": "AND"
+                        },
+                        "$.address.postcode": {
+                            "matchers": [
+                                {
+                                    "match": "integer"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    },
+                    "header": {
+                        "Content-Type": {
+                            "matchers": [
+                                {
+                                    "match": "regex",
+                                    "regex": "application/json(;\\s?charset=[\\w\\-]+)?"
+                                }
+                            ],
+                            "combine": "AND"
+                        }
+                    }
+                },
+                "generators": {
+                    "body": {
+                        "$.id": {
+                            "type": "ProviderState",
+                            "expression": "${userId}",
+                            "dataType": "STRING"
+                        },
+                        "$.address.id": {
+                            "type": "ProviderState",
+                            "expression": "${addressId}",
+                            "dataType": "STRING"
+                        }
+                    }
+                }
+            },
+            "providerStates": [
+                {
+                    "name": "Update user"
+                }
+            ]
+        }
+    ],
+    "metadata": {
+        "pactSpecification": {
+            "version": "3.0.0"
+        },
+        "pact-jvm": {
+            "version": "4.0.10"
+        }
+    }
+}
